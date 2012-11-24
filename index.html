@@ -40,7 +40,27 @@
 
 <p>HypnoDisc is the name for both this library and the hardware it was made for.</p>
 
-<p>The hardware consists of a small wooden <em>disc</em> where a number of LEDs are mounted in a circle. In the case of our prototype, this is a 24-light disc. These LEDs are driven by a small attached board that contains a chain of 74C595 8-bit shift registers.</p>
+<h2>Hardware</h2>
+
+<h3>Disc</h3>
+
+<p>The hardware that was created for this project consists of two main parts. First is the <em>disc</em> itself; a round piece of plywood with a diameter of approximately 12cm. About a centimeter in from the edge is a the circle where the LEDs go. 24 sets of drill holes in the wood allow for their secure mounting. A second circle of resistors a little in from there ensure that we have the necessary current limiting in place. These resistors are placed diagonally, delivering a more <em>dynamic</em> look than if they were placed straight from the LED to the center of the disc.</p>
+
+<p>On the rear of the disc, the cathodes of the LEDs connect to a common ground in the form of a piece of thick copper wire. The anodes are connected to one end of the resistors. The other end of each of the resistors connects to a piece of flat-cable. The common ground connects to a set of four flat-cable wires, to reduce the current that each of the thin wires has to carry.</p>
+
+<h3>Controller</h3>
+
+<p>The controller is a small prototype board with a connector for the flat-cable, a number of 74C595 shift registers, and a connection back to the Arduino.</p>
+
+<p>The flat-cable connector is fashioned from a few separate pieces of pin headers. Two rows of 12 to connect the 24 LEDs and a 2x2 block offset one pin for the grounds. This keeps things visually separated, reducing the chance of errors in production.</p>
+
+<p>The shift registers are placed in series, effectively making a 24-port shift register rather than 3 separate 8-port ones. We do this by connecting the <em>clock</em> and <em>latch</em> pins of all shift registers in parallel. The <em>serial data in</em> pin for the first shift register is driven by the Arduino. The <em>serial data output</em> of that shift register is then connected to the <em>serial data in</em> pin of the second shift register. This one again has its <em>serial data out</em> connected to the next shift register.</p>
+
+<p>We leave <em>output enabled</em> connected to ground, thus always showing output. This means that our output pins will flicker as we shift data down the lines, but given that things are clocked in faster than the human eye can witness it, it saves us a pin in wiring things up.</p>
+
+<h2>Software</h2>
+
+<p><em>more to come</em></p>
         </article>
       </div>
     </div>
