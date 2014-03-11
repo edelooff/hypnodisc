@@ -3,7 +3,6 @@
 HypnoDisc::HypnoDisc(byte discSize, byte pwmLevels, byte latchPin, byte clockPin, byte dataPin)
   : ledStates(discSize),
     pwmMaxLevel(1 << pwmLevels),
-    pwmStep(0),
     latchPin(latchPin),
     clockPin(clockPin),
     dataPin(dataPin) {
