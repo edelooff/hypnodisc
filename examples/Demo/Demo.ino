@@ -1,4 +1,5 @@
 /* Flying dots on a circular board */
+#include <StandardCplusplus.h>
 #include <HypnoDisc.h>
 
 const byte updateInterval = 30;
@@ -18,7 +19,7 @@ void loop() {
 }
 
 void rapidFallingDots(void) {
-  for (byte i = disc.ledCount; i-- > 0;) {
+  for (byte i = ringSize; i-- > 0;) {
     disc.addLight();
     while (!disc.allDotsLanded()) {
       disc.clockwiseDrop();
@@ -31,7 +32,7 @@ void rapidFallingDots(void) {
 void rotorDots(void) {
   byte divisors[] = {12, 8, 6};
   for (byte div = 0; div < sizeof(divisors); div++) {
-    for (byte i = disc.ledCount * 4; i-- > 0;) {
+    for (byte i = ringSize * 4; i-- > 0;) {
       if (i % divisors[div] == 0) {
         disc.addLight();
       }
@@ -43,9 +44,9 @@ void rotorDots(void) {
 }
 
 void slowFallingDots(void) {
-  for (byte i = disc.ledCount; i-- > 0;) {
+  for (byte i = ringSize; i-- > 0;) {
     disc.addLight();
-    for (byte j = disc.ledCount; j-- > 0;) {
+    for (byte j = ringSize; j-- > 0;) {
       disc.clockwiseDrop();
       updateFor(updateInterval);
     }
@@ -54,9 +55,9 @@ void slowFallingDots(void) {
 }
 
 void spinningTrail(void) {
-  for (byte i = 6; i < disc.ledCount; i++) {
+  for (byte i = 6; i < ringSize; i++) {
     disc.addLight();
-    for (byte j = disc.ledCount; --j > 0;) {
+    for (byte j = ringSize; --j > 0;) {
       disc.clockwiseSpin();
       updateFor(updateInterval);
     }

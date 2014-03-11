@@ -1,12 +1,12 @@
 #include "HypnoDisc.h"
 
-HypnoDisc::HypnoDisc(byte ledCountInit, byte pwmLevels, byte latch, byte clock, byte data) {
-  setLength(ledCountInit);
-  pwmMaxLevel = pow(2, (pwmLevels - 1));
-  pwmStep = 0;
-  latchPin = latch;
-  clockPin = clock;
-  dataPin = data;
+HypnoDisc::HypnoDisc(byte discSize, byte pwmLevels, byte latchPin, byte clockPin, byte dataPin)
+  : ledStates(discSize),
+    pwmMaxLevel(1 << pwmLevels),
+    pwmStep(0),
+    latchPin(latchPin),
+    clockPin(clockPin),
+    dataPin(dataPin) {
 }
 
 void HypnoDisc::begin(void) {
@@ -14,18 +14,6 @@ void HypnoDisc::begin(void) {
   pinMode(clockPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
   updateLights();
-}
-
-void HypnoDisc::setLength(byte length) {
-  if (ledStates != NULL) {
-    free(ledStates);
-  }
-  if (NULL != (ledStates = (byte *)malloc(length))) {
-    memset(ledStates, 0x00, length); // Init to RGB 'off' state
-    ledCount = length;
-  } else {  // malloc failed
-    ledCount = 0;
-  }
 }
 
 void HypnoDisc::latchDown(void) {
@@ -44,34 +32,32 @@ void HypnoDisc::addLight(void) {
 
 boolean HypnoDisc::allDotsLanded(void) {
   boolean endOfLanded = false;
-  for (byte i = ledCount; i-- > 0;) {
-    if (ledStates[i] < pwmMaxLevel) {
+  for(std::reverse_iterator<byte*> iter = ledStates.rbegin(); iter != ledStates.rend(); ++iter)
+    if (!endOfLanded && *iter < pwmMaxLevel)
       endOfLanded = true;
-    } else if (ledStates[i] > 0 && endOfLanded) {
+    else if (endOfLanded && *iter > 0)
       return false;
-    }
-  }
   return true;
 }
 
 boolean HypnoDisc::discEmpty(void) {
-  for (byte i = ledCount; i-- > 0;) {
-    if (ledStates[i] > 0) return false;
-  }
+  for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter)
+    if (*iter > 0)
+      return false;
   return true;
 }
 
 boolean HypnoDisc::discFull(void) {
-  for (byte i = ledCount; i-- > 0;) {
-    if (ledStates[i] < pwmMaxLevel) return false;
-  }
+  for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter)
+    if (*iter < pwmMaxLevel)
+      return false;
   return true;
 }
 
 void HypnoDisc::clockwiseDrop(void) {
   // Shifts individual dots down to their spot, or around the ring
   byte current, next;
-  for (current = ledCount; --current > 0;) {
+  for (current = ledStates.size(); --current > 0;) {
     next = current - 1;
     if (ledStates[current] < pwmMaxLevel) {
       ledStates[current] = ledStates[next];
@@ -83,21 +69,16 @@ void HypnoDisc::clockwiseDrop(void) {
 }
 
 void HypnoDisc::clockwiseSpin(void) {
-  byte current, next;
-  byte lastValue = ledStates[ledCount - 1];
-  for (current = ledCount; --current > 0;) {
-    next = current - 1;
-    ledStates[current] = ledStates[next];
-    ledStates[next] >>= 1;
-  }
-  ledStates[0] = max(ledStates[0], lastValue);
-  ledStates[ledCount - 1] = max(ledStates[ledCount - 1], lastValue >> 1);
+  byte lastValue = ledStates.back();
+  clockwiseWipe();
+  ledStates.front() = max(ledStates.front(), lastValue);
+  ledStates.back() = max(ledStates.back(), lastValue >> 1);
 }
 
 void HypnoDisc::clockwiseWipe(void) {
   // Shifts the entire ring out from the array, or turns it round
   byte current, next;
-  for (current = ledCount; --current > 0;) {
+  for (current = ledStates.size(); --current > 0;) {
     next = current - 1;
     ledStates[current] = ledStates[next];
     ledStates[next] >>= 1;
@@ -107,7 +88,7 @@ void HypnoDisc::clockwiseWipe(void) {
 void HypnoDisc::updateLights(void) {
   latchDown();
   byte i, j, shiftData;
-  for (i = 0; i < ledCount / 8; i++) {
+  for (i = 0; i < ledStates.size() / 8; i++) {
     for (j = 0; j < 8; j++) {
       bitWrite(shiftData, j, (ledStates[i * 8 + j] > pwmStep));
     }
