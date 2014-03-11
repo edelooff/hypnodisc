@@ -1,6 +1,7 @@
 #include "HypnoDisc.h"
 
-HypnoDisc::HypnoDisc(byte discSize, byte pwmLevels, byte latchPin, byte clockPin, byte dataPin)
+HypnoDisc::HypnoDisc(
+    byte discSize, byte pwmLevels, byte latchPin, byte clockPin, byte dataPin)
   : ledStates(discSize),
     pwmMaxLevel(1 << pwmLevels),
     latchPin(latchPin),
@@ -31,7 +32,8 @@ void HypnoDisc::addLight(void) {
 
 boolean HypnoDisc::allDotsLanded(void) {
   boolean endOfLanded = false;
-  for(std::reverse_iterator<byte*> iter = ledStates.rbegin(); iter != ledStates.rend(); ++iter)
+  for(std::reverse_iterator<byte*> iter = ledStates.rbegin();
+      iter != ledStates.rend(); ++iter)
     if (!endOfLanded && *iter < pwmMaxLevel)
       endOfLanded = true;
     else if (endOfLanded && *iter > 0)
