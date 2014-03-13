@@ -78,11 +78,16 @@ void HypnoDisc::clockwiseWipe() {
 
 void HypnoDisc::updateLights() {
   latch l = toggleLatch();
-  byte i, j, shiftData;
-  for (i = 0; i < ledStates.size() / 8; i++) {
-    for (j = 0; j < 8; j++) {
-      bitWrite(shiftData, j, (ledStates[i * 8 + j] > pwmStep));
+  byte ctr, shiftData;
+  for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter) {
+    bitWrite(shiftData, ctr++, (*iter > pwmStep));
+    if (ctr == 8) {
+      ctr = 0;
+      shiftOut(dataPin, clockPin, LSBFIRST, shiftData);
+      shiftData = 0;
     }
+  }
+  if (ctr) {
     shiftOut(dataPin, clockPin, LSBFIRST, shiftData);
   }
   pwmStep = ++pwmStep % pwmMaxLevel;
