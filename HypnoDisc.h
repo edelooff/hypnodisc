@@ -30,7 +30,4 @@ class HypnoDisc {
     const byte clockPin, dataPin, latchPin, pwmMaxLevel;
     byte pwmStep = 0;
     std::vector<byte> ledStates;
-    void latchDown();
-    void latchUp();
-    latch toggleLatch();
 };

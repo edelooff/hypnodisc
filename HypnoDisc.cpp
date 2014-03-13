@@ -77,7 +77,7 @@ void HypnoDisc::clockwiseWipe() {
 }
 
 void HypnoDisc::updateLights() {
-  latch l = toggleLatch();
+  latch l = latch(latchPin);
   byte ctr, shiftData;
   for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter) {
     bitWrite(shiftData, ctr++, (*iter > pwmStep));
@@ -91,10 +91,6 @@ void HypnoDisc::updateLights() {
     shiftOut(dataPin, clockPin, LSBFIRST, shiftData);
   }
   pwmStep = ++pwmStep % pwmMaxLevel;
-}
-
-latch HypnoDisc::toggleLatch() {
-  return latch(latchPin);
 }
 
 latch::latch(byte pin)
