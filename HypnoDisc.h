@@ -2,6 +2,12 @@
 #include <vector>
 #include <Arduino.h>
 
+struct latch{
+  latch(byte pin);
+  ~latch(void);
+  const byte pin;
+};
+
 class HypnoDisc {
   public:
     HypnoDisc(
@@ -26,4 +32,5 @@ class HypnoDisc {
     std::vector<byte> ledStates;
     void latchDown(void);
     void latchUp(void);
+    latch toggleLatch(void);
 };

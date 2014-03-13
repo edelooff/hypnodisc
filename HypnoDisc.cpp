@@ -16,16 +16,6 @@ void HypnoDisc::begin(void) {
   updateLights();
 }
 
-void HypnoDisc::latchDown(void) {
-  // Start clocking in data
-  digitalWrite(latchPin, LOW);
-}
-
-void HypnoDisc::latchUp(void) {
-  // Stop clocking in data
-  digitalWrite(latchPin, HIGH);
-}
-
 void HypnoDisc::addLight(void) {
   ledStates[0] = pwmMaxLevel;
 }
@@ -87,7 +77,7 @@ void HypnoDisc::clockwiseWipe(void) {
 }
 
 void HypnoDisc::updateLights(void) {
-  latchDown();
+  latch l = toggleLatch();
   byte i, j, shiftData;
   for (i = 0; i < ledStates.size() / 8; i++) {
     for (j = 0; j < 8; j++) {
@@ -95,6 +85,21 @@ void HypnoDisc::updateLights(void) {
     }
     shiftOut(dataPin, clockPin, LSBFIRST, shiftData);
   }
-  latchUp();
   pwmStep = ++pwmStep % pwmMaxLevel;
+}
+
+latch HypnoDisc::toggleLatch(void) {
+  return latch(latchPin);
+}
+
+
+latch::latch(byte pin)
+  // Pull down the latch to start clocking in data
+  : pin(pin) {
+  digitalWrite(pin, LOW);
+}
+
+latch::~latch() {
+  // Pushes the latch high again, displaying the clocked in data
+  digitalWrite(pin, HIGH);
 }
