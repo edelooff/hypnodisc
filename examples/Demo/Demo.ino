@@ -18,7 +18,7 @@ void loop() {
   rotorDots();
 }
 
-void rapidFallingDots(void) {
+void rapidFallingDots() {
   for (byte i = ringSize; i-- > 0;) {
     disc.addLight();
     while (!disc.allDotsLanded()) {
@@ -29,7 +29,7 @@ void rapidFallingDots(void) {
   wipe();
 }
 
-void rotorDots(void) {
+void rotorDots() {
   byte divisors[] = {12, 8, 6};
   for (byte div = 0; div < sizeof(divisors); div++) {
     for (byte i = ringSize * 4; i-- > 0;) {
@@ -43,7 +43,7 @@ void rotorDots(void) {
   }
 }
 
-void slowFallingDots(void) {
+void slowFallingDots() {
   for (byte i = ringSize; i-- > 0;) {
     disc.addLight();
     for (byte j = ringSize; j-- > 0;) {
@@ -54,7 +54,7 @@ void slowFallingDots(void) {
   wipe();
 }
 
-void spinningTrail(void) {
+void spinningTrail() {
   for (byte i = 6; i < ringSize; i++) {
     disc.addLight();
     for (byte j = ringSize; --j > 0;) {
@@ -65,7 +65,7 @@ void spinningTrail(void) {
   wipe();
 }
 
-void wipe(void) {
+void wipe() {
   while (!disc.discEmpty()) {
     disc.clockwiseWipe();
     updateFor(updateInterval);
