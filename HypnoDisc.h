@@ -4,7 +4,7 @@
 
 struct latch{
   latch(byte pin);
-  ~latch(void);
+  ~latch();
   const byte pin;
 };
 
@@ -16,21 +16,21 @@ class HypnoDisc {
         byte latchPin = 7,
         byte clockPin = 6,
         byte dataPin = 5);
-    void begin(void);
-    void addLight(void);
-    void clockwiseDrop(void);
-    void clockwiseSpin(void);
-    void clockwiseWipe(void);
-    void updateLights(void);
-    boolean allDotsLanded(void);
-    boolean discEmpty(void);
-    boolean discFull(void);
+    void begin();
+    void addLight();
+    void clockwiseDrop();
+    void clockwiseSpin();
+    void clockwiseWipe();
+    void updateLights();
+    boolean allDotsLanded();
+    boolean discEmpty();
+    boolean discFull();
 
   private:
-    byte clockPin, dataPin, latchPin;
-    byte pwmMaxLevel, pwmStep = 0;
+    const byte clockPin, dataPin, latchPin, pwmMaxLevel;
+    byte pwmStep = 0;
     std::vector<byte> ledStates;
-    void latchDown(void);
-    void latchUp(void);
-    latch toggleLatch(void);
+    void latchDown();
+    void latchUp();
+    latch toggleLatch();
 };

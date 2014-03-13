@@ -9,18 +9,18 @@ HypnoDisc::HypnoDisc(
     dataPin(dataPin) {
 }
 
-void HypnoDisc::begin(void) {
+void HypnoDisc::begin() {
   pinMode(latchPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
   updateLights();
 }
 
-void HypnoDisc::addLight(void) {
+void HypnoDisc::addLight() {
   ledStates[0] = pwmMaxLevel;
 }
 
-boolean HypnoDisc::allDotsLanded(void) {
+boolean HypnoDisc::allDotsLanded() {
   boolean endOfLanded = false;
   for(std::reverse_iterator<byte*> iter = ledStates.rbegin();
       iter != ledStates.rend(); ++iter)
@@ -31,21 +31,21 @@ boolean HypnoDisc::allDotsLanded(void) {
   return true;
 }
 
-boolean HypnoDisc::discEmpty(void) {
+boolean HypnoDisc::discEmpty() {
   for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter)
     if (*iter > 0)
       return false;
   return true;
 }
 
-boolean HypnoDisc::discFull(void) {
+boolean HypnoDisc::discFull() {
   for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter)
     if (*iter < pwmMaxLevel)
       return false;
   return true;
 }
 
-void HypnoDisc::clockwiseDrop(void) {
+void HypnoDisc::clockwiseDrop() {
   // Shifts individual dots down to their spot, or around the ring
   byte current, next;
   for (current = ledStates.size(); --current > 0;) {
@@ -59,14 +59,14 @@ void HypnoDisc::clockwiseDrop(void) {
   }
 }
 
-void HypnoDisc::clockwiseSpin(void) {
+void HypnoDisc::clockwiseSpin() {
   byte lastValue = ledStates.back();
   clockwiseWipe();
   ledStates.front() = max(ledStates.front(), lastValue);
   ledStates.back() = max(ledStates.back(), lastValue >> 1);
 }
 
-void HypnoDisc::clockwiseWipe(void) {
+void HypnoDisc::clockwiseWipe() {
   // Shifts the entire ring out from the array, or turns it round
   byte current, next;
   for (current = ledStates.size(); --current > 0;) {
@@ -76,7 +76,7 @@ void HypnoDisc::clockwiseWipe(void) {
   }
 }
 
-void HypnoDisc::updateLights(void) {
+void HypnoDisc::updateLights() {
   latch l = toggleLatch();
   byte i, j, shiftData;
   for (i = 0; i < ledStates.size() / 8; i++) {
@@ -88,10 +88,9 @@ void HypnoDisc::updateLights(void) {
   pwmStep = ++pwmStep % pwmMaxLevel;
 }
 
-latch HypnoDisc::toggleLatch(void) {
+latch HypnoDisc::toggleLatch() {
   return latch(latchPin);
 }
-
 
 latch::latch(byte pin)
   // Pull down the latch to start clocking in data
