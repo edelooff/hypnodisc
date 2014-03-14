@@ -17,7 +17,7 @@ void HypnoDisc::begin() {
 }
 
 void HypnoDisc::addLight() {
-  ledStates[0] = pwmMaxLevel;
+  ledStates.front() = pwmMaxLevel;
 }
 
 boolean HypnoDisc::allDotsLanded() {
