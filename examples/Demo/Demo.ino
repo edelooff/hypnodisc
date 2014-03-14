@@ -2,9 +2,8 @@
 #include <StandardCplusplus.h>
 #include <HypnoDisc.h>
 
-const byte updateInterval = 30;
-const byte ringSize = 24;
-
+const int updateInterval = 30;
+const int ringSize = 24;
 HypnoDisc disc = HypnoDisc(ringSize);
 
 void setup() {
@@ -23,7 +22,7 @@ void rapidFallingDots() {
     disc.addLight();
     while (!disc.allDotsLanded()) {
       disc.clockwiseDrop();
-      updateFor(updateInterval);
+      repeatedUpdate();
     }
   }
   wipe();
@@ -37,7 +36,7 @@ void rotorDots() {
         disc.addLight();
       }
       disc.clockwiseSpin();
-      updateFor(updateInterval);
+      repeatedUpdate();
     }
     wipe();
   }
@@ -48,7 +47,7 @@ void slowFallingDots() {
     disc.addLight();
     for (byte j = ringSize; j-- > 0;) {
       disc.clockwiseDrop();
-      updateFor(updateInterval);
+      repeatedUpdate();
     }
   }
   wipe();
@@ -59,7 +58,7 @@ void spinningTrail() {
     disc.addLight();
     for (byte j = ringSize; --j > 0;) {
       disc.clockwiseSpin();
-      updateFor(updateInterval);
+      repeatedUpdate();
     }
   }
   wipe();
@@ -68,13 +67,13 @@ void spinningTrail() {
 void wipe() {
   while (!disc.discEmpty()) {
     disc.clockwiseWipe();
-    updateFor(updateInterval);
+    repeatedUpdate();
   }
 }
 
-void updateFor(byte timeout) {
+void repeatedUpdate() {
   long currentMillis = millis();
-  while (millis() - currentMillis < timeout) {
+  while (millis() - currentMillis < updateInterval) {
     disc.updateLights();
   }
 }
