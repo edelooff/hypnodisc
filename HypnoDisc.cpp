@@ -47,14 +47,14 @@ boolean HypnoDisc::discFull() {
 
 void HypnoDisc::clockwiseDrop() {
   // Shifts individual dots down to their spot, or around the ring
-  byte current, next;
-  for (current = ledStates.size(); --current > 0;) {
-    next = current - 1;
-    if (ledStates[current] < pwmMaxLevel) {
-      ledStates[current] = ledStates[next];
-      ledStates[next] >>= 1;
-    } else if (ledStates[next] < pwmMaxLevel) {
-      ledStates[next] >>= 1;
+  byte source, target;
+  for (target = ledStates.size(); --target > 0;) {
+    source = target - 1;
+    if (ledStates[target] < pwmMaxLevel) {
+      ledStates[target] = ledStates[source];
+      ledStates[source] >>= 1;
+    } else if (ledStates[source] < pwmMaxLevel) {
+      ledStates[source] >>= 1;
     }
   }
 }
@@ -68,11 +68,11 @@ void HypnoDisc::clockwiseSpin() {
 
 void HypnoDisc::clockwiseWipe() {
   // Shifts the entire ring out from the array, or turns it round
-  byte current, next;
-  for (current = ledStates.size(); --current > 0;) {
-    next = current - 1;
-    ledStates[current] = ledStates[next];
-    ledStates[next] >>= 1;
+  byte source, target;
+  for (target = ledStates.size(); --target > 0;) {
+    source = target - 1;
+    ledStates[target] = ledStates[source];
+    ledStates[source] >>= 1;
   }
 }
 
