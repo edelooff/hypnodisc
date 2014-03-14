@@ -20,8 +20,8 @@ void HypnoDisc::addLight() {
   ledStates.front() = pwmMaxLevel;
 }
 
-boolean HypnoDisc::allDotsLanded() {
-  boolean endOfLanded = false;
+bool HypnoDisc::allDotsLanded() {
+  bool endOfLanded = false;
   for(std::reverse_iterator<byte*> iter = ledStates.rbegin();
       iter != ledStates.rend(); ++iter)
     if (!endOfLanded && *iter < pwmMaxLevel)
@@ -31,14 +31,14 @@ boolean HypnoDisc::allDotsLanded() {
   return true;
 }
 
-boolean HypnoDisc::discEmpty() {
+bool HypnoDisc::discEmpty() {
   for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter)
     if (*iter)
       return false;
   return true;
 }
 
-boolean HypnoDisc::discFull() {
+bool HypnoDisc::discFull() {
   for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter)
     if (*iter != pwmMaxLevel)
       return false;
@@ -47,7 +47,7 @@ boolean HypnoDisc::discFull() {
 
 void HypnoDisc::clockwiseDrop() {
   // Shifts individual dots down to their spot, or around the ring
-  byte source, target;
+  int source, target;
   for (target = ledStates.size(); --target > 0;) {
     source = target - 1;
     if (ledStates[target] < pwmMaxLevel) {
@@ -68,7 +68,7 @@ void HypnoDisc::clockwiseSpin() {
 
 void HypnoDisc::clockwiseWipe() {
   // Shifts the entire ring out from the array, or turns it round
-  byte source, target;
+  int source, target;
   for (target = ledStates.size(); --target > 0;) {
     source = target - 1;
     ledStates[target] = ledStates[source];

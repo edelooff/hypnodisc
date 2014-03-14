@@ -16,9 +16,9 @@ class HypnoDisc {
     void clockwiseSpin();
     void clockwiseWipe();
     void updateLights();
-    boolean allDotsLanded();
-    boolean discEmpty();
-    boolean discFull();
+    bool allDotsLanded();
+    bool discEmpty();
+    bool discFull();
 
   private:
     struct latch{
