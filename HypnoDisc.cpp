@@ -33,14 +33,14 @@ boolean HypnoDisc::allDotsLanded() {
 
 boolean HypnoDisc::discEmpty() {
   for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter)
-    if (*iter > 0)
+    if (*iter)
       return false;
   return true;
 }
 
 boolean HypnoDisc::discFull() {
   for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter)
-    if (*iter < pwmMaxLevel)
+    if (*iter != pwmMaxLevel)
       return false;
   return true;
 }
