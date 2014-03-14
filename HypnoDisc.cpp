@@ -93,13 +93,13 @@ void HypnoDisc::updateLights() {
   pwmStep = ++pwmStep % pwmMaxLevel;
 }
 
-latch::latch(byte pin)
+HypnoDisc::latch::latch(byte pin)
   // Pull down the latch to start clocking in data
   : pin(pin) {
   digitalWrite(pin, LOW);
 }
 
-latch::~latch() {
+HypnoDisc::latch::~latch() {
   // Pushes the latch high again, displaying the clocked in data
   digitalWrite(pin, HIGH);
 }

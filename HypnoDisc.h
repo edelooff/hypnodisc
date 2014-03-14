@@ -2,12 +2,6 @@
 #include <vector>
 #include <Arduino.h>
 
-struct latch{
-  latch(byte pin);
-  ~latch();
-  const byte pin;
-};
-
 class HypnoDisc {
   public:
     HypnoDisc(
@@ -27,6 +21,11 @@ class HypnoDisc {
     boolean discFull();
 
   private:
+    struct latch{
+      latch(byte pin);
+      ~latch();
+      const byte pin;
+    };
     const byte clockPin, dataPin, latchPin, pwmMaxLevel;
     byte pwmStep = 0;
     std::vector<byte> ledStates;
