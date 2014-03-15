@@ -1,9 +1,9 @@
 #include "HypnoDisc.h"
 
 HypnoDisc::HypnoDisc(
-    byte discSize, byte pwmLevels, byte latchPin, byte clockPin, byte dataPin)
+    byte discSize, byte trailSize, byte latchPin, byte clockPin, byte dataPin)
   : ledStates(discSize),
-    pwmMaxLevel(1 << pwmLevels),
+    pwmMaxLevel(1 << (trailSize - 1)),
     latchPin(latchPin),
     clockPin(clockPin),
     dataPin(dataPin) {
@@ -32,21 +32,23 @@ bool HypnoDisc::allDotsLanded() {
 }
 
 bool HypnoDisc::discEmpty() {
-  for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter)
+  for(std::vector<byte>::iterator iter = ledStates.begin();
+      iter != ledStates.end(); ++iter)
     if (*iter)
       return false;
   return true;
 }
 
 bool HypnoDisc::discFull() {
-  for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter)
+  for(std::vector<byte>::iterator iter = ledStates.begin();
+      iter != ledStates.end(); ++iter)
     if (*iter != pwmMaxLevel)
       return false;
   return true;
 }
 
-int HypnoDisc::landedDots() {
-  int dotCount = 0;
+unsigned int HypnoDisc::landedDots() {
+  unsigned int dotCount = 0;
   for(std::reverse_iterator<byte*> iter = ledStates.rbegin();
       iter != ledStates.rend(); ++iter) {
     if (*iter == pwmMaxLevel) dotCount++;
@@ -57,7 +59,7 @@ int HypnoDisc::landedDots() {
 
 void HypnoDisc::clockwiseDrop() {
   // Shifts individual dots down to their spot, or around the ring
-  int source, target;
+  unsigned int source, target;
   for (target = ledStates.size(); --target > 0;) {
     source = target - 1;
     if (ledStates[target] < pwmMaxLevel) {
@@ -77,7 +79,7 @@ void HypnoDisc::clockwiseSpin() {
 
 void HypnoDisc::clockwiseWipe() {
   // Shifts the entire ring out from the array, or turns it round
-  int source, target;
+  unsigned int source, target;
   for (target = ledStates.size(); --target > 0;) {
     source = target - 1;
     ledStates[target] = ledStates[source];
@@ -88,7 +90,8 @@ void HypnoDisc::clockwiseWipe() {
 void HypnoDisc::updateLights() {
   latch l = latch(latchPin);
   byte position = 0, shiftData;
-  for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter) {
+  for(std::vector<byte>::iterator iter = ledStates.begin();
+      iter != ledStates.end(); ++iter) {
     bitWrite(shiftData, position++, (*iter > pwmStep));
     if (position == 8) {
       position = 0;

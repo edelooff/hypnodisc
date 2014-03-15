@@ -6,7 +6,7 @@ class HypnoDisc {
   public:
     HypnoDisc(
         byte discSize,
-        byte pwmLevels = 5,
+        byte trailSize = 5,
         byte latchPin = 7,
         byte clockPin = 6,
         byte dataPin = 5);
@@ -21,7 +21,7 @@ class HypnoDisc {
     bool allDotsLanded();
     bool discEmpty();
     bool discFull();
-    int landedDots();
+    unsigned int landedDots();
 
   private:
     struct latch{

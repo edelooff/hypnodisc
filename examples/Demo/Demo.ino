@@ -2,7 +2,7 @@
 #include <StandardCplusplus.h>
 #include <HypnoDisc.h>
 
-const int updateInterval = 30;
+const int updateInterval = 25;
 const int ringSize = 24;
 HypnoDisc disc = HypnoDisc(ringSize);
 
