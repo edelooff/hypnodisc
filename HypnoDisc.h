@@ -11,14 +11,17 @@ class HypnoDisc {
         byte clockPin = 6,
         byte dataPin = 5);
     void begin();
+    // Movement and display methods
     void addLight();
     void clockwiseDrop();
     void clockwiseSpin();
     void clockwiseWipe();
     void updateLights();
+    // Query methods
     bool allDotsLanded();
     bool discEmpty();
     bool discFull();
+    int landedDots();
 
   private:
     struct latch{

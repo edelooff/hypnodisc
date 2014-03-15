@@ -45,6 +45,16 @@ bool HypnoDisc::discFull() {
   return true;
 }
 
+int HypnoDisc::landedDots() {
+  int dotCount = 0;
+  for(std::reverse_iterator<byte*> iter = ledStates.rbegin();
+      iter != ledStates.rend(); ++iter) {
+    if (*iter == pwmMaxLevel) dotCount++;
+    else break;
+  }
+  return dotCount;
+}
+
 void HypnoDisc::clockwiseDrop() {
   // Shifts individual dots down to their spot, or around the ring
   int source, target;
