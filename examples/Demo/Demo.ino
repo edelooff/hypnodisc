@@ -18,7 +18,7 @@ void loop() {
 }
 
 void rapidFallingDots() {
-  for (byte i = ringSize; i-- > 0;) {
+  while (!disc.discFull()) {
     disc.addLight();
     while (!disc.allDotsLanded()) {
       repeatedUpdate();
@@ -42,7 +42,7 @@ void rotorDots() {
 }
 
 void slowFallingDots() {
-  for (byte i = ringSize; i-- > 0;) {
+  while (!disc.discFull()) {
     disc.addLight();
     for (byte j = ringSize; j-- > 0;) {
       repeatedUpdate();
@@ -53,7 +53,7 @@ void slowFallingDots() {
 }
 
 void spinningTrail() {
-  for (byte i = 6; i < ringSize; i++) {
+  for (byte i = 9; i < ringSize; i++) {
     disc.addLight();
     for (byte j = ringSize; --j > 0;) {
       repeatedUpdate();
@@ -72,7 +72,6 @@ void wipe() {
 
 void repeatedUpdate() {
   long currentMillis = millis();
-  while (millis() - currentMillis < updateInterval) {
+  while (millis() - currentMillis < updateInterval)
     disc.updateLights();
-  }
 }
