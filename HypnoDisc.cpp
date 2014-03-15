@@ -63,7 +63,6 @@ void HypnoDisc::clockwiseSpin() {
   byte lastValue = ledStates.back();
   clockwiseWipe();
   ledStates.front() = max(ledStates.front(), lastValue);
-  ledStates.back() = max(ledStates.back(), lastValue >> 1);
 }
 
 void HypnoDisc::clockwiseWipe() {
@@ -78,16 +77,16 @@ void HypnoDisc::clockwiseWipe() {
 
 void HypnoDisc::updateLights() {
   latch l = latch(latchPin);
-  byte ctr, shiftData;
+  byte position = 0, shiftData;
   for(byte *iter = ledStates.begin(); iter != ledStates.end(); ++iter) {
-    bitWrite(shiftData, ctr++, (*iter > pwmStep));
-    if (ctr == 8) {
-      ctr = 0;
+    bitWrite(shiftData, position++, (*iter > pwmStep));
+    if (position == 8) {
+      position = 0;
       shiftOut(dataPin, clockPin, LSBFIRST, shiftData);
       shiftData = 0;
     }
   }
-  if (ctr) {
+  if (position) {
     shiftOut(dataPin, clockPin, LSBFIRST, shiftData);
   }
   pwmStep = ++pwmStep % pwmMaxLevel;
