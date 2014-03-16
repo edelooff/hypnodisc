@@ -16,11 +16,12 @@ void HypnoDisc::begin() {
   updateLights();
 }
 
-void HypnoDisc::addLight() {
+void HypnoDisc::addDot() {
   ledStates.front() = pwmMaxLevel;
 }
 
-bool HypnoDisc::allDotsLanded() {
+bool HypnoDisc::allDropped() {
+  // Returns whether or not all dots have dropped to the end of the disc
   bool endOfLanded = false;
   for(std::reverse_iterator<byte*> iter = ledStates.rbegin();
       iter != ledStates.rend(); ++iter)
@@ -31,7 +32,8 @@ bool HypnoDisc::allDotsLanded() {
   return true;
 }
 
-bool HypnoDisc::discEmpty() {
+bool HypnoDisc::empty() {
+  // Returns whether or not the disc is completely empty
   for(std::vector<byte>::iterator iter = ledStates.begin();
       iter != ledStates.end(); ++iter)
     if (*iter)
@@ -39,7 +41,8 @@ bool HypnoDisc::discEmpty() {
   return true;
 }
 
-bool HypnoDisc::discFull() {
+bool HypnoDisc::full() {
+  // Returns whether or not the disc is filled with fully lit dots
   for(std::vector<byte>::iterator iter = ledStates.begin();
       iter != ledStates.end(); ++iter)
     if (*iter != pwmMaxLevel)
@@ -47,7 +50,8 @@ bool HypnoDisc::discFull() {
   return true;
 }
 
-unsigned int HypnoDisc::landedDots() {
+unsigned int HypnoDisc::dotsDropped() {
+  // Returns the number of dots that have landed
   unsigned int dotCount = 0;
   for(std::reverse_iterator<byte*> iter = ledStates.rbegin();
       iter != ledStates.rend(); ++iter) {
@@ -72,13 +76,14 @@ void HypnoDisc::clockwiseDrop() {
 }
 
 void HypnoDisc::clockwiseSpin() {
+  // Moves all dots on the disc by one position, wrapping across the ends
   byte lastValue = ledStates.back();
   clockwiseWipe();
   ledStates.front() = max(ledStates.front(), lastValue);
 }
 
 void HypnoDisc::clockwiseWipe() {
-  // Shifts the entire ring out from the array, or turns it round
+  // Moves all dots on the disc by one position without wrapping the ends
   unsigned int source, target;
   for (target = ledStates.size(); --target > 0;) {
     source = target - 1;
@@ -88,6 +93,7 @@ void HypnoDisc::clockwiseWipe() {
 }
 
 void HypnoDisc::updateLights() {
+  //
   latch l = latch(latchPin);
   byte position = 0, shiftData;
   for(std::vector<byte>::iterator iter = ledStates.begin();
