@@ -16,11 +16,11 @@ class HypnoDisc {
     void clockwiseDrop();
     void clockwiseSpin();
     void clockwiseWipe();
-    void updateLights();
+    void update();
     // Query methods
-    bool allDropped();
-    bool empty();
-    bool full();
+    bool isEmpty();
+    bool isFull();
+    bool isIdle();
     unsigned int dotsDropped();
 
   private:

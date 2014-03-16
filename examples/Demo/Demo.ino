@@ -18,9 +18,9 @@ void loop() {
 }
 
 void rapidFallingDots() {
-  while (!disc.full()) {
+  while (!disc.isFull()) {
     disc.addDot();
-    while (!disc.allDropped()) {
+    while (!disc.isIdle()) {
       repeatedUpdate();
       disc.clockwiseDrop();
     }
@@ -42,7 +42,7 @@ void rotorDots() {
 }
 
 void slowFallingDots() {
-  while (!disc.full()) {
+  while (!disc.isFull()) {
     disc.addDot();
     for (byte j = ringSize; j-- > 0;) {
       repeatedUpdate();
@@ -64,7 +64,7 @@ void spinningTrail() {
 }
 
 void wipe() {
-  while (!disc.empty()) {
+  while (!disc.isEmpty()) {
     disc.clockwiseWipe();
     repeatedUpdate();
   }
@@ -73,5 +73,5 @@ void wipe() {
 void repeatedUpdate() {
   long currentMillis = millis();
   while (millis() - currentMillis < updateInterval)
-    disc.updateLights();
+    disc.update();
 }

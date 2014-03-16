@@ -13,27 +13,14 @@ void HypnoDisc::begin() {
   pinMode(latchPin, OUTPUT);
   pinMode(clockPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
-  updateLights();
+  update();
 }
 
 void HypnoDisc::addDot() {
   ledStates.front() = pwmMaxLevel;
 }
 
-bool HypnoDisc::allDropped() {
-  // Returns whether or not all dots have dropped to the end of the disc
-  bool pastLanded = false;
-  for(std::reverse_iterator<byte*> iter = ledStates.rbegin();
-      iter != ledStates.rend(); ++iter) {
-    if (!pastLanded && *iter != pwmMaxLevel)
-      pastLanded = true;
-    if (pastLanded && *iter)
-      return false;
-  }
-  return true;
-}
-
-bool HypnoDisc::empty() {
+bool HypnoDisc::isEmpty() {
   // Returns whether or not the disc is completely empty
   for(std::vector<byte>::iterator iter = ledStates.begin();
       iter != ledStates.end(); ++iter)
@@ -42,12 +29,28 @@ bool HypnoDisc::empty() {
   return true;
 }
 
-bool HypnoDisc::full() {
+bool HypnoDisc::isFull() {
   // Returns whether or not the disc is filled with fully lit dots
   for(std::vector<byte>::iterator iter = ledStates.begin();
       iter != ledStates.end(); ++iter)
     if (*iter != pwmMaxLevel)
       return false;
+  return true;
+}
+
+bool HypnoDisc::isIdle() {
+  // Returns whether or not the disc is idle
+  //
+  // The disc is considered idle if all dots are at the end of the disc
+  // and no trails are present (this happens after calling 'clockwiseDrop').
+  bool pastLanded = false;
+  for(std::reverse_iterator<byte*> iter = ledStates.rbegin();
+      iter != ledStates.rend(); ++iter) {
+    if (!pastLanded && *iter != pwmMaxLevel)
+      pastLanded = true;
+    if (pastLanded && *iter)
+      return false;
+  }
   return true;
 }
 
@@ -93,8 +96,12 @@ void HypnoDisc::clockwiseWipe() {
   }
 }
 
-void HypnoDisc::updateLights() {
+void HypnoDisc::update() {
+  // Writes out a new frame to the shift register hardware.
   //
+  // Each update turns on only those LEDs that have a value larger than the
+  // pwmStep variable, which is incremented every update. This way, with enough
+  // sequential updates, proper brightness control is achieved.
   latch l = latch(latchPin);
   byte position = 0, shiftData;
   for(std::vector<byte>::iterator iter = ledStates.begin();
