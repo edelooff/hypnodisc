@@ -22,13 +22,14 @@ void HypnoDisc::addDot() {
 
 bool HypnoDisc::allDropped() {
   // Returns whether or not all dots have dropped to the end of the disc
-  bool endOfLanded = false;
+  bool pastLanded = false;
   for(std::reverse_iterator<byte*> iter = ledStates.rbegin();
-      iter != ledStates.rend(); ++iter)
-    if (!endOfLanded && *iter < pwmMaxLevel)
-      endOfLanded = true;
-    else if (endOfLanded && *iter > 0)
+      iter != ledStates.rend(); ++iter) {
+    if (!pastLanded && *iter != pwmMaxLevel)
+      pastLanded = true;
+    if (pastLanded && *iter)
       return false;
+  }
   return true;
 }
 
