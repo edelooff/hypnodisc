@@ -113,9 +113,8 @@ void HypnoDisc::update() {
       shiftData = 0;
     }
   }
-  if (position) {
+  if (position)
     shiftOut(dataPin, clockPin, LSBFIRST, shiftData);
-  }
   pwmStep = ++pwmStep % pwmMaxLevel;
 }
 

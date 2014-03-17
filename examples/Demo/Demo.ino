@@ -2,8 +2,8 @@
 #include <StandardCplusplus.h>
 #include <HypnoDisc.h>
 
-const int updateInterval = 25;
-const int ringSize = 24;
+const unsigned int updateInterval = 25;
+const unsigned int ringSize = 24;
 HypnoDisc disc = HypnoDisc(ringSize);
 
 void setup() {
@@ -31,7 +31,7 @@ void rapidFallingDots() {
 void rotorDots() {
   byte divisors[] = {12, 8, 6};
   for (byte div = 0; div < sizeof(divisors); div++) {
-    for (unsigned int i = ringSize * 4; i-- > 0;) {
+    for (unsigned int i = ringSize * 5; i-- > 0;) {
       if (i % divisors[div] == 0)
         disc.addDot();
       repeatedUpdate();
