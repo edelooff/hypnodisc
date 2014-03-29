@@ -20,6 +20,24 @@ void HypnoDisc::addDot() {
   ledStates.front() = pwmMaxLevel;
 }
 
+bool HypnoDisc::hasFallingDots(bool includeTrail) {
+  // Returns whether or not there are falling dots on the disc.
+  //
+  // Dots are considered to be falling when they are not all in one contiguous
+  // block at the end of the disc. When the 'includeTrails' argument is true
+  // (which is the default) the disc is considered to have dots falling when
+  // a trail is still visible.
+  byte dot, maxLevel = pwmMaxLevel;
+  for(std::reverse_iterator<byte*> iter = ledStates.rbegin();
+      iter != ledStates.rend(); ++iter) {
+    dot = *iter;
+    if (dot > maxLevel or (includeTrail && dot != 0 && dot != maxLevel))
+      return true;
+    maxLevel = dot;
+  }
+  return false;
+}
+
 bool HypnoDisc::isEmpty() {
   // Returns whether or not the disc is completely empty
   for(std::vector<byte>::iterator iter = ledStates.begin();
@@ -35,22 +53,6 @@ bool HypnoDisc::isFull() {
       iter != ledStates.end(); ++iter)
     if (*iter != pwmMaxLevel)
       return false;
-  return true;
-}
-
-bool HypnoDisc::isIdle() {
-  // Returns whether or not the disc is idle
-  //
-  // The disc is considered idle if all dots are at the end of the disc
-  // and no trails are present (this happens after calling 'clockwiseDrop').
-  bool pastLanded = false;
-  for(std::reverse_iterator<byte*> iter = ledStates.rbegin();
-      iter != ledStates.rend(); ++iter) {
-    if (!pastLanded && *iter != pwmMaxLevel)
-      pastLanded = true;
-    if (pastLanded && *iter)
-      return false;
-  }
   return true;
 }
 

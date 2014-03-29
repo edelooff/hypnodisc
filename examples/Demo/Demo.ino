@@ -20,7 +20,7 @@ void loop() {
 void rapidFallingDots() {
   while (!disc.isFull()) {
     disc.addDot();
-    while (!disc.isIdle()) {
+    while (disc.hasFallingDots()) {
       repeatedUpdate();
       disc.clockwiseDrop();
     }

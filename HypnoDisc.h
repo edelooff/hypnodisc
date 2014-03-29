@@ -18,9 +18,9 @@ class HypnoDisc {
     void clockwiseWipe();
     void update();
     // Query methods
+    bool hasFallingDots(bool includeTrail = true);
     bool isEmpty();
     bool isFull();
-    bool isIdle();
     unsigned int dotsDropped();
 
   private:
